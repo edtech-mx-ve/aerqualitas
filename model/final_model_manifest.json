@@ -1,0 +1,23 @@
+{
+  "project": "AerQualitas",
+  "version": "0.5.0",
+  "status": "final_model_evaluated",
+  "selected_model": "MLP_feedforward",
+  "model_file": "aerqualitas_mlp.keras",
+  "preprocessor_file": "preprocessor.joblib",
+  "selection_decided_before_test": true,
+  "selection_basis": "validation_results_sprint3",
+  "test_opened_for_final_evaluation": true,
+  "post_test_tuning_allowed": false,
+  "evaluated_at_utc": "2026-09-14T08:23:58.628389+00:00",
+  "test_rows": 6264,
+  "test_metrics": {
+    "mae": 47.78185484894239,
+    "rmse": 64.58408815629038,
+    "r2": 0.3333621394770362
+  },
+  "artifact_sha256": {
+    "model": "bf991f5c362fbd3f68f10f0889f02f06b1770dec61b2aebc3c70c934a8057e74",
+    "preprocessor": "542b7c81c009955818665843ea79634684390c8092256021969f0f1b9f33b7ca"
+  }
+}

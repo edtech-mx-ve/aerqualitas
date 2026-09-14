@@ -1,0 +1,56 @@
+{
+  "project": "AerQualitas",
+  "version": "0.4.0",
+  "model_type": "feedforward_multilayer_perceptron",
+  "task": "supervised_regression",
+  "original_features": [
+    "TEMP",
+    "PRES",
+    "DEWP",
+    "cbwd",
+    "Iws",
+    "Is",
+    "Ir"
+  ],
+  "target": "pm2.5",
+  "preprocessed_input_dim": 10,
+  "architecture": [
+    {
+      "layer": "Input",
+      "units": 10
+    },
+    {
+      "layer": "Dense",
+      "units": 64,
+      "activation": "relu"
+    },
+    {
+      "layer": "Dense",
+      "units": 32,
+      "activation": "relu"
+    },
+    {
+      "layer": "Dense",
+      "units": 1,
+      "activation": "linear"
+    }
+  ],
+  "optimizer": {
+    "name": "Adam",
+    "learning_rate_initial": 0.001
+  },
+  "loss": "mean_squared_error",
+  "metric_during_training": "mean_absolute_error",
+  "batch_size": 64,
+  "max_epochs": 200,
+  "epochs_executed": 58,
+  "early_stopping_patience": 15,
+  "reduce_lr_patience": 6,
+  "random_seed": 42,
+  "train_rows": 29229,
+  "validation_rows": 6264,
+  "test_rows_reserved": 6264,
+  "test_evaluated": false,
+  "preprocessor": "preprocessor.joblib",
+  "model_file": "aerqualitas_mlp.keras"
+}

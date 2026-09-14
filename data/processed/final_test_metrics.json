@@ -1,0 +1,38 @@
+{
+  "evaluation": "final_reserved_test",
+  "selection_basis": "validation_only_sprint3",
+  "no_retraining_or_tuning_with_test": true,
+  "test_rows": 6264,
+  "test_period": {
+    "start": "2014-04-11T09:00:00",
+    "end": "2014-12-31T23:00:00"
+  },
+  "mlp": {
+    "mae": 47.78185484894239,
+    "rmse": 64.58408815629038,
+    "r2": 0.3333621394770362
+  },
+  "baseline": {
+    "mae": 52.28441152010379,
+    "rmse": 70.05240136060245,
+    "r2": 0.21569503374094467
+  },
+  "comparison": {
+    "differences": {
+      "mae": 4.5025566711614005,
+      "rmse": 5.468313204312068,
+      "r2": 0.11766710573609152
+    },
+    "relative_improvement": {
+      "mae_percent": 8.611661755875613,
+      "rmse_percent": 7.806032481546669
+    },
+    "metrics_improved": 3,
+    "mlp_better_on_test": true
+  },
+  "validation_reference_mlp": {
+    "mae": 55.32745132870296,
+    "rmse": 83.25987962081788,
+    "r2": 0.3053080613778356
+  }
+}

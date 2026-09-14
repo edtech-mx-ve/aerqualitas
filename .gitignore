@@ -1,0 +1,63 @@
+# AerQualitas — repositorio de despliegue
+
+# Entornos locales
+.venv/
+venv/
+env/
+
+# Cachés Python y herramientas
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Logs
+logs/
+*.log
+
+# Datos originales y artefactos no usados por la app desplegada
+data/raw/
+data/processed/cleaning_manifest.json
+
+# Desarrollo interno
+docs/
+tests/
+conftest.py
+requirements-dev.txt
+pyproject.toml
+
+# Scripts de entrenamiento / reconstrucción (no necesarios en runtime)
+prepare_data.py
+train_baseline.py
+train_mlp.py
+evaluate_final.py
+prepare_inference.py
+
+# Artefactos de modelo que la app desplegada no usa directamente
+model/baseline_linear.joblib
+model/input_metadata.json
+model/mlp_model_summary.txt
+
+# Backups / paquetes
+Backups/
+backups/
+*.zip
+
+# README auxiliares: solo README.md debe quedar
+README_*.md
+!README.md
+
+# Secretos / variables de entorno
+.env
+.env.*
+.streamlit/secrets.toml
+
+# IDE / sistema operativo
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

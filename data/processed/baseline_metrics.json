@@ -1,0 +1,16 @@
+{
+  "model": "LinearRegression",
+  "purpose": "baseline_only",
+  "train": {
+    "mae": 57.02899672027303,
+    "rmse": 79.11324927196183,
+    "r2": 0.27078357583480817
+  },
+  "validation": {
+    "mae": 61.22599320928642,
+    "rmse": 88.72404102506064,
+    "r2": 0.21113383386509765
+  },
+  "test": null,
+  "test_status": "reserved"
+}

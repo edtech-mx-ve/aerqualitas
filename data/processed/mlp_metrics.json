@@ -1,0 +1,31 @@
+{
+  "model": "MLP_feedforward",
+  "framework": "TensorFlow/Keras",
+  "purpose": "candidate_deep_learning_model",
+  "train": {
+    "mae": 49.50021529997071,
+    "rmse": 71.81317405738967,
+    "r2": 0.3991497545422208
+  },
+  "validation": {
+    "mae": 55.32745132870296,
+    "rmse": 83.25987962081788,
+    "r2": 0.3053080613778356
+  },
+  "baseline_validation": {
+    "mae": 61.22599320928642,
+    "rmse": 88.72404102506064,
+    "r2": 0.21113383386509765
+  },
+  "comparison": {
+    "improvements": {
+      "mae": 5.898541880583458,
+      "rmse": 5.464161404242759,
+      "r2": 0.09417422751273796
+    },
+    "metrics_improved": 3,
+    "beats_baseline": true
+  },
+  "test": null,
+  "test_status": "reserved"
+}

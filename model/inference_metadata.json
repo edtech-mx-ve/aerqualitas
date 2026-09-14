@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "source_partition": "training_only",
+  "hard_constraints": true,
+  "feature_order": [
+    "TEMP",
+    "PRES",
+    "DEWP",
+    "cbwd",
+    "Iws",
+    "Is",
+    "Ir"
+  ],
+  "numeric": {
+    "TEMP": {
+      "label": "Temperatura",
+      "unit": "°C",
+      "step": 1.0,
+      "description": "Temperatura del aire.",
+      "min": -19.0,
+      "max": 41.0,
+      "default": 13.0
+    },
+    "PRES": {
+      "label": "Presión atmosférica",
+      "unit": "hPa",
+      "step": 1.0,
+      "description": "Presión atmosférica.",
+      "min": 991.0,
+      "max": 1046.0,
+      "default": 1016.0
+    },
+    "DEWP": {
+      "label": "Punto de rocío",
+      "unit": "°C",
+      "step": 1.0,
+      "description": "Temperatura de punto de rocío.",
+      "min": -29.0,
+      "max": 28.0,
+      "default": 1.0
+    },
+    "Iws": {
+      "label": "Velocidad acumulada del viento",
+      "unit": "m/s",
+      "step": 0.01,
+      "description": "Velocidad acumulada del viento registrada por la fuente.",
+      "min": 0.45,
+      "max": 565.49,
+      "default": 6.26
+    },
+    "Is": {
+      "label": "Horas acumuladas de nieve",
+      "unit": "h",
+      "step": 1.0,
+      "description": "Horas acumuladas con nieve.",
+      "min": 0.0,
+      "max": 27.0,
+      "default": 0.0
+    },
+    "Ir": {
+      "label": "Horas acumuladas de lluvia",
+      "unit": "h",
+      "step": 1.0,
+      "description": "Horas acumuladas con lluvia.",
+      "min": 0.0,
+      "max": 36.0,
+      "default": 0.0
+    }
+  },
+  "categorical": {
+    "cbwd": {
+      "label": "Dirección combinada del viento",
+      "allowed": [
+        "NE",
+        "NW",
+        "SE",
+        "cv"
+      ],
+      "default": "SE",
+      "description": "Código de dirección del viento tal como aparece en el dataset UCI."
+    }
+  },
+  "target": {
+    "name": "pm2.5",
+    "label": "PM2.5 estimado",
+    "unit": "µg/m³"
+  },
+  "model": {
+    "file": "aerqualitas_mlp.keras",
+    "preprocessor": "preprocessor.joblib",
+    "status": "final_model_evaluated",
+    "artifact_sha256": {
+      "model": "bf991f5c362fbd3f68f10f0889f02f06b1770dec61b2aebc3c70c934a8057e74",
+      "preprocessor": "542b7c81c009955818665843ea79634684390c8092256021969f0f1b9f33b7ca"
+    }
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "rows": 43824,
+  "columns": 13,
+  "missing_target": 2067,
+  "missing_features": 0,
+  "duplicate_rows": 0,
+  "duplicate_timestamps": 0,
+  "non_hourly_gaps": 0,
+  "datetime_min": "2010-01-01T00:00:00",
+  "datetime_max": "2014-12-31T23:00:00",
+  "wind_categories": [
+    "NE",
+    "NW",
+    "SE",
+    "cv"
+  ],
+  "numeric_ranges_raw": {
+    "pm2.5": {
+      "min": 0.0,
+      "max": 994.0,
+      "mean": 98.61321455085375,
+      "median": 72.0
+    },
+    "DEWP": {
+      "min": -40.0,
+      "max": 28.0,
+      "mean": 1.817246257758306,
+      "median": 2.0
+    },
+    "TEMP": {
+      "min": -19.0,
+      "max": 42.0,
+      "mean": 12.448521358159981,
+      "median": 14.0
+    },
+    "PRES": {
+      "min": 991.0,
+      "max": 1046.0,
+      "mean": 1016.4476542533771,
+      "median": 1016.0
+    },
+    "Iws": {
+      "min": 0.45,
+      "max": 585.6,
+      "mean": 23.889139512595836,
+      "median": 5.37
+    },
+    "Is": {
+      "min": 0.0,
+      "max": 27.0,
+      "mean": 0.05273366192040891,
+      "median": 0.0
+    },
+    "Ir": {
+      "min": 0.0,
+      "max": 36.0,
+      "mean": 0.19491602774735306,
+      "median": 0.0
+    }
+  },
+  "clean_rows": 41757,
+  "rows_removed_missing_target": 2067,
+  "clean_missing_values": 0
+}

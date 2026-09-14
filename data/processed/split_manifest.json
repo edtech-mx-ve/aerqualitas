@@ -1,0 +1,37 @@
+{
+  "project": "AerQualitas",
+  "version": "0.3.0",
+  "policy": "chronological_no_shuffle",
+  "fractions": {
+    "train": 0.7,
+    "validation": 0.15,
+    "test": 0.15
+  },
+  "features": [
+    "TEMP",
+    "PRES",
+    "DEWP",
+    "cbwd",
+    "Iws",
+    "Is",
+    "Ir"
+  ],
+  "target": "pm2.5",
+  "train": {
+    "rows": 29229,
+    "datetime_start": "2010-01-02T00:00:00",
+    "datetime_end": "2013-07-21T22:00:00"
+  },
+  "validation": {
+    "rows": 6264,
+    "datetime_start": "2013-07-21T23:00:00",
+    "datetime_end": "2014-04-11T08:00:00"
+  },
+  "test": {
+    "rows": 6264,
+    "datetime_start": "2014-04-11T09:00:00",
+    "datetime_end": "2014-12-31T23:00:00"
+  },
+  "test_reserved": true,
+  "note": "El conjunto de prueba se reserva sin métricas en Sprint 2 para evitar utilizarlo durante decisiones de modelado."
+}

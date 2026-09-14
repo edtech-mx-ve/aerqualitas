@@ -1,0 +1,18 @@
+{
+  "mlp": {
+    "mean_residual": -12.53730371883698,
+    "median_absolute_error": 37.85194969177246,
+    "p90_absolute_error": 98.18906326293944,
+    "max_absolute_error": 309.5113983154297
+  },
+  "baseline": {
+    "mean_residual": -11.267672272131101,
+    "median_absolute_error": 40.84735266778431,
+    "p90_absolute_error": 106.44707480350164,
+    "max_absolute_error": 351.7795016755383
+  },
+  "residual_definition": "observed_pm25_minus_predicted_pm25",
+  "positive_mean_residual_interpretation": "average_underprediction",
+  "negative_mean_residual_interpretation": "average_overprediction",
+  "quartile_note": "Q1-Q4 are descriptive quartiles of observed PM2.5 in the test set; they are not air-quality categories."
+}
