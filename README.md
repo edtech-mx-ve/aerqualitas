@@ -13,15 +13,27 @@ Aplicación web interactiva desarrollada en **Python** con un **MLP feedforward*
 [![Streamlit](https://img.shields.io/badge/Streamlit-App-FF4B4B?logo=streamlit&logoColor=white)](https://streamlit.io/)
 [![scikit-learn](https://img.shields.io/badge/scikit--learn-ML-F7931E?logo=scikitlearn&logoColor=white)](https://scikit-learn.org/)
 [![Dataset](https://img.shields.io/badge/Dataset-UCI-0A66C2)](https://archive.ics.uci.edu/dataset/381/beijing%2Bpm2%2B5%2Bdata)
+[![App](https://img.shields.io/badge/Streamlit-AerQualitas%20Online-FF4B4B?logo=streamlit&logoColor=white)](https://aerqualitas.streamlit.app/)
 
 **Instituto Internacional de Aguascalientes**  
 Maestría en Inteligencia Artificial para la Transformación Digital · Aprendizaje Profundo
 
+[🚀 Abrir AerQualitas](https://aerqualitas.streamlit.app/) ·
 [Repositorio](https://github.com/edtech-mx-ve/aerqualitas) ·
 [Institución](https://www.iinternacional.edu.mx/) ·
 [Dataset UCI](https://archive.ics.uci.edu/dataset/381/beijing%2Bpm2%2B5%2Bdata)
 
 </div>
+
+---
+
+## Aplicación en línea
+
+AerQualitas está desplegada públicamente en **Streamlit Community Cloud** y puede utilizarse directamente desde el navegador:
+
+### 👉 [https://aerqualitas.streamlit.app/](https://aerqualitas.streamlit.app/)
+
+No requiere instalación local para realizar estimaciones. La aplicación utiliza el **modelo MLP ya entrenado**, junto con su preprocesador y metadatos de inferencia versionados en el repositorio.
 
 ---
 
@@ -474,6 +486,13 @@ git push
 
 # Despliegue en Streamlit Community Cloud
 
+**Estado:** ✅ Desplegada públicamente
+
+**URL de producción:** [https://aerqualitas.streamlit.app/](https://aerqualitas.streamlit.app/)
+
+El despliegue utiliza el repositorio `edtech-mx-ve/aerqualitas`, la rama `main`, `app.py` como archivo principal y Python 3.11.
+
+
 ## Requisitos previos
 
 Antes de desplegar:
@@ -653,6 +672,7 @@ Instituto Internacional de Aguascalientes
 - **Institución:** https://www.iinternacional.edu.mx/
 - **Dataset:** https://archive.ics.uci.edu/dataset/381/beijing%2Bpm2%2B5%2Bdata
 - **DOI:** https://doi.org/10.24432/C5JS49
+- **Aplicación en línea:** https://aerqualitas.streamlit.app/
 - **Streamlit Community Cloud:** https://share.streamlit.io/
 
 ---
@@ -662,6 +682,8 @@ Instituto Internacional de Aguascalientes
 ### AerQualitas
 
 **Variables meteorológicas → Preprocesamiento → MLP entrenado → PM2.5 estimado**
+
+Versión 0.8.0 · Aplicación desplegada en Streamlit Community Cloud
 
 Proyecto académico de Deep Learning aplicado.
 
