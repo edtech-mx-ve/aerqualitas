@@ -56,31 +56,92 @@ La aplicación:
 
 ---
 
-## Flujo general
+## Arquitectura didáctica del flujo del modelo
 
-```text
-Variables meteorológicas
-        ↓
-Validación
-        ↓
-Preprocesamiento
-        ↓
-10 características numéricas
-        ↓
-Dense(64, ReLU)
-        ↓
-Dense(32, ReLU)
-        ↓
-Dense(1, lineal)
-        ↓
-PM2.5 estimado
+AerQualitas transforma una observación meteorológica en una estimación de PM2.5 mediante una secuencia explícita de validación, preprocesamiento e inferencia.
+
+```mermaid
+flowchart LR
+    A["7 variables originales<br/>TEMP · PRES · DEWP<br/>cbwd · Iws · Is · Ir"]
+    B["Validación<br/>rangos y categorías"]
+    C["Preprocesamiento<br/>6 numéricas → StandardScaler<br/>cbwd → OneHotEncoder"]
+    D["10 características<br/>numéricas"]
+    E["Dense 64<br/>ReLU"]
+    F["Dense 32<br/>ReLU"]
+    G["Dense 1<br/>lineal"]
+    H["PM2.5 estimado<br/>µg/m³"]
+
+    A --> B --> C --> D --> E --> F --> G --> H
 ```
 
 En forma compacta:
 
 ```text
-Variables meteorológicas → Preprocesamiento → MLP entrenado → PM2.5 estimado
+7 variables meteorológicas
+→ validación
+→ preprocesamiento
+→ 10 características
+→ Dense(64, ReLU)
+→ Dense(32, ReLU)
+→ Dense(1, lineal)
+→ PM2.5 estimado
 ```
+
+### ¿De dónde salen los pesos del MLP?
+
+```text
+Variables meteorológicas históricas + PM2.5 observado
+                    ↓
+               entrenamiento
+                    ↓
+          MSE + backpropagation + Adam
+                    ↓
+           pesos y sesgos aprendidos
+                    ↓
+          model/aerqualitas_mlp.keras
+                    ↓
+              inferencia web
+```
+
+Los pesos no están definidos manualmente. Son parámetros aprendidos durante el entrenamiento con observaciones históricas del dataset Beijing PM2.5.
+---
+
+## Integración tecnológica implementada
+
+AerQualitas separa presentación, datos, validación, preprocesamiento, modelado, evaluación e inferencia para mantener una arquitectura clara y reproducible.
+
+| Capa | Tecnología / artefacto | Responsabilidad |
+|---|---|---|
+| Interfaz | Streamlit / `app.py` | Navegación, formularios, tablas, gráficos y presentación de resultados |
+| Datos | pandas / `src/aerqualitas/data` | Lectura, validación, limpieza y exploración del dataset procesado |
+| Validación | Python / `src/aerqualitas/inference/validation.py` | Tipos, categorías y rangos permitidos |
+| Preprocesamiento | scikit-learn | `StandardScaler`, `OneHotEncoder` y `ColumnTransformer` |
+| Baseline | scikit-learn | Regresión lineal de referencia |
+| Deep Learning | TensorFlow / Keras | MLP feedforward `64 → 32 → 1` |
+| Persistencia | Keras + joblib + JSON | Modelo, preprocesador y metadatos |
+| Evaluación | scikit-learn / NumPy | MAE, RMSE, R² y análisis de errores |
+| Integridad | SHA-256 | Verificación del modelo y el preprocesador |
+| Versionado | Git / GitHub | Código y artefactos esenciales |
+| Despliegue | Streamlit Community Cloud | Ejecución pública de la aplicación |
+
+```mermaid
+flowchart LR
+    U["Usuario"] --> UI["Streamlit<br/>app.py"]
+    UI --> V["Validación<br/>Python"]
+    V --> P["Preprocesamiento<br/>scikit-learn"]
+    P --> M["MLP entrenado<br/>TensorFlow / Keras"]
+    M --> R["PM2.5 estimado"]
+
+    D["Dataset procesado<br/>pandas"] --> UI
+    A["Artefactos<br/>Keras · joblib · JSON"] --> P
+    A --> M
+
+    G["GitHub"] --> C["Streamlit Community Cloud"]
+    C --> UI
+```
+
+**Flujo tecnológico resumido:**  
+`Usuario → Streamlit → validación → scikit-learn → TensorFlow/Keras → PM2.5 estimado`
 
 ---
 
@@ -224,24 +285,35 @@ La finalidad de la línea base es comprobar si la red neuronal aporta una mejora
 
 ## Fundamento del cálculo
 
-Después del preprocesamiento, el modelo recibe un vector numérico `x'`.
+Después del preprocesamiento, el modelo recibe un vector numérico `x'` de 10 características.
 
-La red puede resumirse como:
+La red neuronal puede resumirse como:
 
-\[
-\widehat{PM2.5}
+$$
+\widehat{\mathrm{PM2.5}}
 =
-W_3\,ReLU\left(
-W_2\,ReLU\left(
-W_1x'+b_1
-\right)+b_2
-\right)+b_3
-\]
+W_3\,\mathrm{ReLU}
+\left(
+W_2\,\mathrm{ReLU}
+\left(
+W_1x' + b_1
+\right)
++b_2
+\right)
++b_3
+$$
 
-Los pesos `W` y sesgos `b` fueron **aprendidos durante el entrenamiento**.
+donde:
 
-AerQualitas no utiliza una ecuación meteorológica fija definida manualmente; aprende empíricamente la relación entre las variables meteorológicas y PM2.5.
+- `x'` representa las características después del preprocesamiento;
+- `W₁`, `W₂`, `W₃` son matrices de pesos aprendidos;
+- `b₁`, `b₂`, `b₃` son sesgos aprendidos;
+- `ReLU` introduce no linealidad en las capas ocultas;
+- la capa final es lineal porque PM2.5 es una variable continua.
 
+Los pesos y sesgos fueron **aprendidos durante el entrenamiento** y se conservan en `model/aerqualitas_mlp.keras`.
+
+> **Importante:** AerQualitas no utiliza una ecuación meteorológica fija definida manualmente ni calcula físicamente masa de partículas sobre volumen de aire. El modelo aprende empíricamente la relación entre variables meteorológicas y concentraciones históricas observadas de PM2.5.
 ---
 
 ## Funciones esenciales del proyecto
@@ -356,90 +428,88 @@ http://localhost:8501
 
 ---
 
-# Pruebas
+# Verificación local
 
-Antes de desplegar o subir cambios:
-
-```powershell
-pytest -q
-```
-
-No debe aparecer ningún `FAILED`.
-
-También:
+Antes de publicar cambios se recomienda comprobar que el código compile y que la app arranque correctamente:
 
 ```powershell
 python -m compileall src app.py
-```
-
----
-
-# Reproducir el pipeline completo
-
-> Para usar la aplicación normalmente **no es necesario volver a entrenar el modelo**.
-
-Solo ejecuta esta secuencia si deseas reproducir académicamente todo el pipeline:
-
-```powershell
-python prepare_data.py --overwrite
-python train_baseline.py --overwrite
-python train_mlp.py --overwrite
-python evaluate_final.py
-python prepare_inference.py --overwrite
-pytest -q
 streamlit run app.py
 ```
 
+Durante el desarrollo académico se utilizó además una suite automatizada con `pytest`. Esa suite pertenece al entorno local de desarrollo y no al paquete público mínimo de despliegue.
 ---
 
-# Estructura del proyecto
+# Modelo entrenado e inferencia
+
+El repositorio público está optimizado para **despliegue e inferencia**. La aplicación utiliza el MLP ya entrenado y el preprocesador persistido:
+
+```text
+model/aerqualitas_mlp.keras
+model/preprocessor.joblib
+model/inference_metadata.json
+model/final_model_manifest.json
+model/mlp_metadata.json
+```
+
+Para utilizar la aplicación **no es necesario volver a entrenar el modelo**.
+
+El entrenamiento, la evaluación y las pruebas completas se realizaron durante el desarrollo académico. El repositorio de despliegue conserva los componentes necesarios para ejecutar la app, reproducir la inferencia y documentar sus resultados.
+---
+
+# Estructura del repositorio público
+
+El repositorio publicado contiene los archivos esenciales de ejecución y despliegue:
 
 ```text
 aerqualitas/
 │
 ├── app.py
-├── prepare_data.py
-├── train_baseline.py
-├── train_mlp.py
-├── evaluate_final.py
-├── prepare_inference.py
+├── README.md
+├── requirements.txt
+├── .gitignore
 │
-├── src/
-│   └── aerqualitas/
-│       ├── data/
-│       ├── modeling/
-│       ├── inference/
-│       ├── config.py
-│       ├── paths.py
-│       ├── logging_config.py
-│       └── validation.py
-│
-├── data/
-│   ├── raw/
-│   └── processed/
-│
-├── model/
-│   ├── aerqualitas_mlp.keras
-│   ├── preprocessor.joblib
-│   ├── baseline_linear.joblib
-│   ├── final_model_manifest.json
-│   └── inference_metadata.json
+├── .streamlit/
+│   └── config.toml
 │
 ├── assets/
 │   └── logo.png
 │
-├── tests/
-├── docs/
-├── .streamlit/
-│   └── config.toml
+├── src/
+│   └── aerqualitas/
+│       ├── __init__.py
+│       ├── config.py
+│       ├── paths.py
+│       ├── logging_config.py
+│       ├── validation.py
+│       ├── data/
+│       ├── modeling/
+│       └── inference/
 │
-├── requirements.txt
-├── requirements-dev.txt
-├── pyproject.toml
-├── .gitignore
-└── README.md
+├── model/
+│   ├── aerqualitas_mlp.keras
+│   ├── preprocessor.joblib
+│   ├── inference_metadata.json
+│   ├── final_model_manifest.json
+│   └── mlp_metadata.json
+│
+└── data/
+    └── processed/
+        ├── beijing_pm25_clean.csv
+        ├── data_quality_report.json
+        ├── split_manifest.json
+        ├── baseline_metrics.json
+        ├── baseline_validation_predictions.csv
+        ├── mlp_metrics.json
+        ├── mlp_training_history.csv
+        ├── mlp_validation_predictions.csv
+        ├── final_test_metrics.json
+        ├── final_test_predictions.csv
+        ├── final_error_analysis.json
+        └── final_error_by_quartile.csv
 ```
 
+No se publican entornos virtuales, logs, backups, secretos, archivos temporales ni el dataset crudo.
 ---
 
 # GitHub — primera publicación
@@ -455,7 +525,9 @@ git init
 git branch -M main
 git remote add origin https://github.com/edtech-mx-ve/aerqualitas.git
 git status
-git add .
+git add app.py README.md requirements.txt .gitignore
+git add .streamlit/config.toml assets/logo.png
+git add src/aerqualitas model data/processed
 git commit -m "Initial release AerQualitas v0.8.0"
 git push -u origin main
 ```
@@ -475,9 +547,9 @@ No vuelvas a agregarlo.
 Después de hacer cambios y probar:
 
 ```powershell
-pytest -q
+python -m compileall src app.py
 git status
-git add .
+git add <archivos_modificados>
 git commit -m "Describe el cambio realizado"
 git push
 ```
@@ -533,42 +605,40 @@ app.py
 
 ---
 
-# Qué debe estar en GitHub
+# Contenido esencial del repositorio
 
-Debe subirse:
+El despliegue público conserva:
 
 ```text
 app.py
+README.md
 requirements.txt
+.gitignore
 .streamlit/config.toml
-src/
+assets/
+src/aerqualitas/
 model/
 data/processed/
-assets/
-README.md
 ```
 
-Para reproducibilidad académica también puede conservarse:
-
-```text
-data/raw/
-docs/
-tests/
-```
-
-No subir:
+No se publican:
 
 ```text
 .venv/
 __pycache__/
 .pytest_cache/
 logs/
+data/raw/
+docs/
+tests/
+Backups/
+*.zip
 *.pyc
-tokens
-contraseñas
-secretos
+.env
+.streamlit/secrets.toml
 ```
 
+Esta separación mantiene el repositorio enfocado en la ejecución pública de AerQualitas y evita incluir archivos internos de desarrollo innecesarios.
 ---
 
 # Solución de problemas
