@@ -1669,6 +1669,26 @@ def initialize_prediction_state(
     )
 
 
+def prediction_payload_matches_preset(
+    payload: dict[str, object],
+    preset_payload: dict[str, object] | None,
+    *,
+    tolerance: float = 1e-9,
+) -> bool:
+    """Return True only when the current inputs still match the loaded preset."""
+    if not isinstance(preset_payload, dict):
+        return False
+
+    numeric_keys = ("TEMP", "PRES", "DEWP", "Iws", "Is", "Ir")
+    try:
+        for key in numeric_keys:
+            if abs(float(payload[key]) - float(preset_payload[key])) > tolerance:
+                return False
+        return str(payload["cbwd"]) == str(preset_payload["cbwd"])
+    except (KeyError, TypeError, ValueError):
+        return False
+
+
 def load_preset_into_prediction_state(
     preset: dict[str, object],
     *,
@@ -1695,6 +1715,10 @@ def load_preset_into_prediction_state(
         preset["reference_pm25"]
     )
     st.session_state["aq_selected_preset_datetime"] = str(preset["datetime"])
+    st.session_state["aq_selected_preset_payload"] = {
+        key: float(payload[key]) for key in numeric
+    }
+    st.session_state["aq_selected_preset_payload"]["cbwd"] = category
 
 
 def render_prediction_section(*, compact: bool = False) -> None:
@@ -1812,15 +1836,7 @@ def render_prediction_section(*, compact: bool = False) -> None:
 
     with manual_tab:
         selected_label = st.session_state.get("aq_selected_preset_label")
-        if selected_label:
-            reference = float(
-                st.session_state["aq_selected_preset_reference_pm25"]
-            )
-            st.success(
-                f"Ejemplo cargado: **{selected_label}** · PM2.5 histórico de "
-                f"referencia: **{reference:.1f} µg/m³**. Puede modificar los "
-                "valores antes de estimar."
-            )
+        preset_status = st.empty()
 
         col1, col2 = st.columns(2)
 
@@ -1904,6 +1920,26 @@ def render_prediction_section(*, compact: bool = False) -> None:
             "Ir": rain,
         }
 
+        preset_reference_active = bool(selected_label) and prediction_payload_matches_preset(
+            payload,
+            st.session_state.get("aq_selected_preset_payload"),
+        )
+
+        if selected_label and preset_reference_active:
+            reference = float(
+                st.session_state["aq_selected_preset_reference_pm25"]
+            )
+            preset_status.success(
+                f"Ejemplo cargado: **{selected_label}** · PM2.5 histórico de "
+                f"referencia: **{reference:.1f} µg/m³**."
+            )
+        elif selected_label:
+            preset_status.info(
+                "Los valores del ejemplo cargado fueron modificados. "
+                "La referencia histórica del preset ya no se utilizará para "
+                "comparar esta estimación."
+            )
+
         if st.button(
             "Estimar PM2.5",
             type="primary",
@@ -1942,7 +1978,7 @@ def render_prediction_section(*, compact: bool = False) -> None:
                 "características después del preprocesamiento."
             )
 
-            if selected_label:
+            if preset_reference_active:
                 reference = float(
                     st.session_state["aq_selected_preset_reference_pm25"]
                 )
