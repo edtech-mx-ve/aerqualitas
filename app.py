@@ -2080,12 +2080,12 @@ def render_help_section() -> None:
     st.subheader("Ayuda y glosario")
     st.markdown(
         "Esta sección resume qué hace AerQualitas, de dónde provienen sus datos, "
-        "cómo participa el modelo Deep Learning y qué significan los términos "
-        "principales utilizados en la aplicación."
+        "cómo participa el modelo Deep Learning, qué tecnologías integran la solución "
+        "y qué significan los términos principales utilizados en la aplicación."
     )
 
-    tab1, tab2, tab3, tab4 = st.tabs(
-        ["Cómo funciona", "Dataset", "Modelo DL", "Glosario"]
+    tab1, tab2, tab3, tab4, tab5 = st.tabs(
+        ["Cómo funciona", "Dataset", "Modelo DL", "Tecnologías", "Glosario"]
     )
 
     with tab1:
@@ -2155,7 +2155,111 @@ def render_help_section() -> None:
             """
         )
 
+        architecture_image_path = ASSETS_DIR / "Arquitectura_MLP.png"
+        st.markdown("#### Arquitectura didáctica del modelo")
+        if architecture_image_path.is_file():
+            st.image(
+                str(architecture_image_path),
+                caption=(
+                    "Arquitectura del MLP feedforward de AerQualitas: "
+                    "7 variables meteorológicas → preprocesamiento → 10 características "
+                    "→ Dense(64, ReLU) → Dense(32, ReLU) → Dense(1, lineal) "
+                    "→ PM2.5 estimado."
+                ),
+                use_container_width=True,
+            )
+        else:
+            st.info(
+                "La imagen didáctica de arquitectura no está disponible en este entorno."
+            )
+
     with tab4:
+        st.markdown("#### Integración tecnológica implementada")
+        st.markdown(
+            """
+            AerQualitas separa **presentación, datos, validación, preprocesamiento,
+            modelado, evaluación e inferencia** para mantener una arquitectura clara,
+            trazable y reproducible.
+            """
+        )
+        technology = pd.DataFrame(
+            [
+                (
+                    "Interfaz",
+                    "Streamlit / app.py",
+                    "Navegación, formularios, tablas, gráficos y presentación de resultados",
+                ),
+                (
+                    "Datos",
+                    "pandas / src/aerqualitas/data",
+                    "Lectura, validación, limpieza y exploración del dataset procesado",
+                ),
+                (
+                    "Validación",
+                    "Python / src/aerqualitas/inference/validation.py",
+                    "Tipos, categorías y rangos permitidos",
+                ),
+                (
+                    "Preprocesamiento",
+                    "scikit-learn",
+                    "StandardScaler, OneHotEncoder y ColumnTransformer",
+                ),
+                (
+                    "Baseline",
+                    "scikit-learn",
+                    "Regresión lineal de referencia",
+                ),
+                (
+                    "Deep Learning",
+                    "TensorFlow / Keras",
+                    "MLP feedforward 64 → 32 → 1",
+                ),
+                (
+                    "Persistencia",
+                    "Keras + joblib + JSON",
+                    "Modelo, preprocesador y metadatos",
+                ),
+                (
+                    "Evaluación",
+                    "scikit-learn / NumPy",
+                    "MAE, RMSE, R² y análisis de errores",
+                ),
+                (
+                    "Integridad",
+                    "SHA-256",
+                    "Verificación del modelo y el preprocesador",
+                ),
+                (
+                    "Versionado",
+                    "Git / GitHub",
+                    "Código y artefactos esenciales",
+                ),
+                (
+                    "Despliegue",
+                    "Streamlit Community Cloud",
+                    "Ejecución pública de la aplicación",
+                ),
+            ],
+            columns=["Capa", "Tecnología / artefacto", "Responsabilidad"],
+        )
+        st.dataframe(
+            technology,
+            hide_index=True,
+            width="stretch",
+            height=430,
+        )
+        st.markdown("#### Flujo tecnológico resumido")
+        st.code(
+            "Usuario → Streamlit → validación → scikit-learn → "
+            "TensorFlow/Keras → PM2.5 estimado",
+            language="text",
+        )
+        st.caption(
+            "El preprocesador transforma la entrada y el MLP ya entrenado realiza "
+            "la inferencia; Streamlit coordina la interacción y presenta el resultado."
+        )
+
+    with tab5:
         glossary = pd.DataFrame(
             [
                 ("PM2.5", "Material particulado fino con diámetro aerodinámico ≤ 2.5 µm."),

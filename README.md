@@ -108,6 +108,9 @@ Los pesos no están definidos manualmente. Son parámetros aprendidos durante el
 
 ## Integración tecnológica implementada
 
+Esta misma integración está documentada dentro de la aplicación en **Ayuda → Tecnologías**.
+
+
 AerQualitas separa presentación, datos, validación, preprocesamiento, modelado, evaluación e inferencia para mantener una arquitectura clara y reproducible.
 
 | Capa | Tecnología / artefacto | Responsabilidad |
@@ -146,6 +149,9 @@ flowchart LR
 ---
 
 ## Arquitectura del modelo
+
+La arquitectura también se explica de forma didáctica dentro de la aplicación en **Ayuda → Modelo DL**.
+
 
 El modelo final es un **MLP feedforward para regresión**:
 
@@ -361,8 +367,34 @@ La interfaz contiene:
 - **Modelo DL** — arquitectura, entrenamiento y validación;
 - **Evaluación** — métricas finales y análisis de errores;
 - **Predicción** — entrada manual y ejemplos preestablecidos;
-- **Ayuda** — funcionamiento, dataset, modelo y glosario;
+- **Ayuda** — funcionamiento, dataset, Modelo DL, tecnologías y glosario;
 - **Institucional** — identificación académica y técnica.
+
+
+### Organización de la sección Ayuda
+
+La sección **Ayuda** se divide en cinco pestañas:
+
+| Pestaña | Contenido |
+|---|---|
+| Cómo funciona | Resumen del flujo general de AerQualitas |
+| Dataset | Origen, variables, alcance y limitaciones de los datos |
+| Modelo DL | Explicación del MLP feedforward utilizado y su arquitectura |
+| Tecnologías | Integración tecnológica implementada en la aplicación |
+| Glosario | Definiciones breves de los términos técnicos principales |
+
+La pestaña **Tecnologías** documenta la separación entre interfaz, datos, validación, preprocesamiento, modelado, evaluación, persistencia, integridad, versionado y despliegue. Su flujo resumido es:
+
+```text
+Usuario
+→ Streamlit
+→ validación
+→ scikit-learn
+→ TensorFlow/Keras
+→ PM2.5 estimado
+```
+
+Esta organización mantiene la documentación técnica accesible desde la propia aplicación sin mezclarla con la lógica de inferencia.
 
 ---
 
@@ -761,6 +793,8 @@ Instituto Internacional de Aguascalientes
 **Variables meteorológicas → Preprocesamiento → MLP entrenado → PM2.5 estimado**
 
 Versión 0.8.0 · Aplicación desplegada en Streamlit Community Cloud
+
+Ayuda actualizada con pestañas **Modelo DL** y **Tecnologías** para documentar la arquitectura y la integración técnica de la aplicación.
 
 Proyecto académico de Deep Learning aplicado.
 
