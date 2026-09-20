@@ -287,27 +287,34 @@ La finalidad de la línea base es comprobar si la red neuronal aporta una mejora
 
 Después del preprocesamiento, el modelo recibe un vector numérico `x'` de 10 características.
 
-La red neuronal puede resumirse como:
+La red neuronal puede resumirse así:
 
-$$
-\widehat{\mathrm{PM2.5}}
-=
-W_3\,\mathrm{ReLU}
-\left(
-W_2\,\mathrm{ReLU}
-\left(
-W_1x' + b_1
-\right)
-+b_2
-\right)
-+b_3
-$$
+```text
+PM2.5 estimado =
+W3 · ReLU(
+    W2 · ReLU(
+        W1 · x' + b1
+    ) + b2
+) + b3
+```
+
+### Lectura por capas
+
+```text
+x'
+↓
+Dense(64, ReLU)   → h1 = ReLU(W1 · x' + b1)
+↓
+Dense(32, ReLU)   → h2 = ReLU(W2 · h1 + b2)
+↓
+Dense(1, lineal)  → PM2.5 estimado = W3 · h2 + b3
+```
 
 donde:
 
-- `x'` representa las características después del preprocesamiento;
-- `W₁`, `W₂`, `W₃` son matrices de pesos aprendidos;
-- `b₁`, `b₂`, `b₃` son sesgos aprendidos;
+- `x'` representa las 10 características después del preprocesamiento;
+- `W1`, `W2`, `W3` son matrices de pesos aprendidos;
+- `b1`, `b2`, `b3` son sesgos aprendidos;
 - `ReLU` introduce no linealidad en las capas ocultas;
 - la capa final es lineal porque PM2.5 es una variable continua.
 
